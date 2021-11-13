@@ -1,18 +1,21 @@
-// @ts-nocheck
 import Link from "next/link";
+
+import type { InferGetStaticPropsType } from "next";
 
 import { getLatestPosts } from "./../lib/api";
 
-const Home = ({ latestPosts } = {}) => {
-  const { nodes } = latestPosts;
+const Home = ({
+  latestPosts,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const { nodes } = latestPosts ?? {};
 
   return (
     <div>
       <h1>Our Wordpress/Next app Home Page</h1>
       <ul>
-        {nodes.map((node) => (
-          <div key={node.slug}>
-            <Link href={"posts/" + node.slug}>{node.title}</Link>
+        {nodes?.map((node) => (
+          <div key={node?.slug}>
+            <Link href={"posts/" + node?.slug}>{node?.title}</Link>
           </div>
         ))}
       </ul>

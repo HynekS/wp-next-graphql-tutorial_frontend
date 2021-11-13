@@ -1,6 +1,27 @@
+import type {
+  LatestPostsQueryVariables,
+  LatestPostsQuery,
+  AllPostsWithSlugQueryVariables,
+  AllPostsWithSlugQuery,
+  PostQueryVariables,
+  PostQuery,
+} from "../generated/graphql";
+
+type Query = LatestPostsQuery | AllPostsWithSlugQuery | PostQuery;
+
+type Options = {
+  variables?:
+    | LatestPostsQueryVariables
+    | AllPostsWithSlugQueryVariables
+    | PostQueryVariables;
+};
+
 const API_URL = "http://127.0.0.1/wp/graphql";
 
-export async function fetchAPI(query, { variables } = {}) {
+export async function fetchAPI<T extends Query>(
+  query: string,
+  { variables }: Options = {}
+): Promise<T> {
   const headers = { "Content-Type": "application/json" };
 
   const res = await fetch(API_URL, {
@@ -20,7 +41,7 @@ export async function fetchAPI(query, { variables } = {}) {
 }
 
 export async function getLatestPosts() {
-  const data = await fetchAPI(`
+  const data = await fetchAPI<LatestPostsQuery>(/* GraphQL */ `
     query LatestPosts {
       posts {
         nodes {
@@ -34,21 +55,22 @@ export async function getLatestPosts() {
 }
 
 export async function getAllPostsWithSlug() {
-  const data = await fetchAPI(`
-    query AllPostsWithSlug {
-      posts(first: 100) {
-        nodes {
-          slug
+  const data: AllPostsWithSlugQuery =
+    await fetchAPI<AllPostsWithSlugQuery>(/* GraphQL */ `
+      query AllPostsWithSlug {
+        posts(first: 100) {
+          nodes {
+            slug
+          }
         }
       }
-    }
-  `);
+    `);
   return data?.posts;
 }
 
-export async function getPost(slug) {
-  const data = await fetchAPI(
-    `
+export async function getPost(slug: PostQueryVariables["id"]) {
+  const data: PostQuery = await fetchAPI<PostQuery>(
+    /* GraphQL */ `
       query Post($id: ID!) {
         post(id: $id, idType: SLUG) {
           content

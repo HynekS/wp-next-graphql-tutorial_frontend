@@ -7,10 +7,16 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-	"export": "next build && next export",
-    "static": "next build && next export && cd out && start http://localhost:5000 && serve -p 5000"
+    "export": "next build && next export",
+    "static": "next build && next export && cd out && start http://localhost:5000 && serve -p 5000",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@graphql-codegen/cli": "^2.2.2",
+    "@graphql-codegen/introspection": "^2.1.0",
+    "@graphql-codegen/typescript": "^2.3.1",
+    "@graphql-codegen/typescript-operations": "^2.2.0",
+    "graphql": "^16.0.1",
     "next": "12.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2"
@@ -20,6 +26,9 @@
     "@types/react": "17.0.33",
     "eslint": "7",
     "eslint-config-next": "12.0.1",
-    "typescript": "4.4.4"
+    "typescript": "4.4.4",
+    "@graphql-codegen/typescript": "2.3.1",
+    "@graphql-codegen/introspection": "2.1.0",
+    "@graphql-codegen/cli": "2.2.2"
   }
 }

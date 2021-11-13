@@ -1,0 +1,11 @@
+overwrite: true
+schema: "http://127.0.0.1/wp/graphql"
+documents: "lib/api.(js|ts)"
+generates:
+  generated/graphql.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"

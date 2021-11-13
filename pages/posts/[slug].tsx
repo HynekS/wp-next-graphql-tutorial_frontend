@@ -1,21 +1,26 @@
-// @ts-nocheck
 import Link from "next/link";
+
+import type { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 
 import { getAllPostsWithSlug, getPost } from "../../lib/api";
 
-const Post = ({ post }) => {
+const Post = ({ post }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  let { title, date, content } = post ?? {};
+
   return (
     <div>
       <Link href="/">Back to Homepage</Link>
-      <h1>{post.title}</h1>
-      <time dateTime={post.date}>{new Date(post.date).toDateString()}</time>
-      <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+      <h1>{title}</h1>
+      {date && <time dateTime={date}>{new Date(date).toDateString()}</time>}
+      <div dangerouslySetInnerHTML={{ __html: content ?? "" }}></div>
     </div>
   );
 };
 
-export async function getStaticProps(context) {
-  const { slug } = context.params;
+export async function getStaticProps(
+  context: GetStaticPropsContext<{ slug: string }>
+) {
+  const slug = String(context.params?.slug);
   const post = await getPost(slug);
   return {
     props: {
@@ -27,8 +32,7 @@ export async function getStaticProps(context) {
 export async function getStaticPaths() {
   const allPostsWithSlug = await getAllPostsWithSlug();
   return {
-    // map over a list of fetched slugs and return a relative url that will be recognized by Next
-    paths: allPostsWithSlug.nodes.map((node) => `/posts/${node.slug}`) || [],
+    paths: allPostsWithSlug?.nodes?.map((node) => `/posts/${node?.slug}`) ?? [],
     fallback: false,
   };
 }

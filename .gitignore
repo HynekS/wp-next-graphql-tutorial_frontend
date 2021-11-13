@@ -35,3 +35,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# generated schema and types
+graphql.schema.json
+generated/
